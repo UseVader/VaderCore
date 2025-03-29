@@ -1,194 +1,212 @@
-
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { ChevronLeft, Plus, Save, Tag, X, Terminal, Search } from 'lucide-react';
-import CommandItem from '@/components/ui/CommandItem';
-import { Command as CommandType } from '@/lib/types';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem as CommandMenuItem, CommandList } from "@/components/ui/command";
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  ChevronLeft,
+  Plus,
+  Save,
+  Tag,
+  X,
+  Terminal,
+  Search,
+} from "lucide-react";
+import CommandItem from "@/components/common/CommandItem";
+import { Command as CommandType } from "@/lib/types";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem as CommandMenuItem,
+  CommandList,
+} from "@/components/ui/command";
 
 // Mock data for predefined commands
 const predefinedCommands: CommandType[] = [
   {
-    id: 'predef-1',
-    name: 'Check Node Version',
-    shellCommand: 'node --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Node.js version',
-    expectedOutput: 'v18.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-1",
+    name: "Check Node Version",
+    shellCommand: "node --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Node.js version",
+    expectedOutput: "v18.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-2',
-    name: 'Check NPM Version',
-    shellCommand: 'npm --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed npm version',
-    expectedOutput: '9.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-2",
+    name: "Check NPM Version",
+    shellCommand: "npm --version",
+    type: "PREDEFINED",
+    description: "Displays the installed npm version",
+    expectedOutput: "9.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-3',
-    name: 'Docker Version',
-    shellCommand: 'docker --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Docker version',
-    expectedOutput: 'Docker version 24.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-3",
+    name: "Docker Version",
+    shellCommand: "docker --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Docker version",
+    expectedOutput: "Docker version 24.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-4',
-    name: 'Git Version',
-    shellCommand: 'git --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Git version',
-    expectedOutput: 'git version 2.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-4",
+    name: "Git Version",
+    shellCommand: "git --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Git version",
+    expectedOutput: "git version 2.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-5',
-    name: 'Check Python Version',
-    shellCommand: 'python --version || python3 --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Python version',
-    expectedOutput: 'Python 3.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-5",
+    name: "Check Python Version",
+    shellCommand: "python --version || python3 --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Python version",
+    expectedOutput: "Python 3.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-6',
-    name: 'Java Version',
-    shellCommand: 'java -version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Java version',
+    id: "predef-6",
+    name: "Java Version",
+    shellCommand: "java -version",
+    type: "PREDEFINED",
+    description: "Displays the installed Java version",
     expectedOutput: 'java version "11.x.x"',
-    scriptId: '',
-    order: 0
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-7',
-    name: 'Ruby Version',
-    shellCommand: 'ruby --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Ruby version',
-    expectedOutput: 'ruby 3.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-7",
+    name: "Ruby Version",
+    shellCommand: "ruby --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Ruby version",
+    expectedOutput: "ruby 3.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-8',
-    name: 'Go Version',
-    shellCommand: 'go version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Go version',
-    expectedOutput: 'go version go1.x',
-    scriptId: '',
-    order: 0
+    id: "predef-8",
+    name: "Go Version",
+    shellCommand: "go version",
+    type: "PREDEFINED",
+    description: "Displays the installed Go version",
+    expectedOutput: "go version go1.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-9',
-    name: 'Maven Version',
-    shellCommand: 'mvn --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Maven version',
-    expectedOutput: 'Apache Maven 3.x.x',
-    scriptId: '',
-    order: 0
+    id: "predef-9",
+    name: "Maven Version",
+    shellCommand: "mvn --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Maven version",
+    expectedOutput: "Apache Maven 3.x.x",
+    scriptId: "",
+    order: 0,
   },
   {
-    id: 'predef-10',
-    name: 'Gradle Version',
-    shellCommand: 'gradle --version',
-    type: 'PREDEFINED',
-    description: 'Displays the installed Gradle version',
-    expectedOutput: 'Gradle 7.x.x',
-    scriptId: '',
-    order: 0
-  }
+    id: "predef-10",
+    name: "Gradle Version",
+    shellCommand: "gradle --version",
+    type: "PREDEFINED",
+    description: "Displays the installed Gradle version",
+    expectedOutput: "Gradle 7.x.x",
+    scriptId: "",
+    order: 0,
+  },
 ];
 
 const ScriptBuilder = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const [scriptName, setScriptName] = useState('');
-  const [scriptDescription, setScriptDescription] = useState('');
+  const [scriptName, setScriptName] = useState("");
+  const [scriptDescription, setScriptDescription] = useState("");
   const [scriptTags, setScriptTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
+  const [tagInput, setTagInput] = useState("");
   const [selectedCommands, setSelectedCommands] = useState<CommandType[]>([]);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [customCommandName, setCustomCommandName] = useState('');
-  const [customCommandShell, setCustomCommandShell] = useState('');
+  const [customCommandName, setCustomCommandName] = useState("");
+  const [customCommandShell, setCustomCommandShell] = useState("");
   const [showCustomCommandForm, setShowCustomCommandForm] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [filteredCommands, setFilteredCommands] = useState(predefinedCommands);
-  
+
   useEffect(() => {
     if (searchValue) {
       setFilteredCommands(
-        predefinedCommands.filter(cmd => 
-          cmd.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-          cmd.shellCommand.toLowerCase().includes(searchValue.toLowerCase()) ||
-          (cmd.description && cmd.description.toLowerCase().includes(searchValue.toLowerCase()))
+        predefinedCommands.filter(
+          (cmd) =>
+            cmd.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            cmd.shellCommand
+              .toLowerCase()
+              .includes(searchValue.toLowerCase()) ||
+            (cmd.description &&
+              cmd.description.toLowerCase().includes(searchValue.toLowerCase()))
         )
       );
     } else {
       setFilteredCommands(predefinedCommands);
     }
   }, [searchValue]);
-  
+
   const addTag = () => {
     if (tagInput.trim() && !scriptTags.includes(tagInput.trim())) {
       setScriptTags([...scriptTags, tagInput.trim()]);
-      setTagInput('');
+      setTagInput("");
     }
   };
-  
+
   const removeTag = (tag: string) => {
-    setScriptTags(scriptTags.filter(t => t !== tag));
+    setScriptTags(scriptTags.filter((t) => t !== tag));
   };
-  
+
   const addCommand = (command: CommandType) => {
     setSelectedCommands([
-      ...selectedCommands, 
-      { 
-        ...command, 
-        id: `cmd-${Date.now()}`, 
+      ...selectedCommands,
+      {
+        ...command,
+        id: `cmd-${Date.now()}`,
         order: selectedCommands.length,
-        scriptId: 'new-script'
-      }
+        scriptId: "new-script",
+      },
     ]);
     setShowCommandPalette(false);
-    setSearchValue('');
+    setSearchValue("");
   };
-  
+
   const addCustomCommand = () => {
     if (customCommandName.trim() && customCommandShell.trim()) {
       const newCommand: CommandType = {
         id: `custom-${Date.now()}`,
         name: customCommandName.trim(),
         shellCommand: customCommandShell.trim(),
-        type: 'CUSTOM',
-        scriptId: 'new-script',
-        order: selectedCommands.length
+        type: "CUSTOM",
+        scriptId: "new-script",
+        order: selectedCommands.length,
       };
-      
+
       setSelectedCommands([...selectedCommands, newCommand]);
-      setCustomCommandName('');
-      setCustomCommandShell('');
+      setCustomCommandName("");
+      setCustomCommandShell("");
       setShowCustomCommandForm(false);
     }
   };
-  
+
   const removeCommand = (index: number) => {
     const newCommands = [...selectedCommands];
     newCommands.splice(index, 1);
@@ -198,14 +216,17 @@ const ScriptBuilder = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <div className="flex-1">
         {/* Script Builder Header */}
         <div className="bg-secondary/50 border-b border-border">
           <div className="container-custom py-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div>
-                <Link to={`/projects/${projectId}`} className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-2">
+                <Link
+                  to={`/projects/${projectId}`}
+                  className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-2"
+                >
                   <ChevronLeft size={16} className="mr-1" />
                   Back to Project
                 </Link>
@@ -214,11 +235,9 @@ const ScriptBuilder = () => {
                   Create a diagnostic script by adding commands below
                 </p>
               </div>
-              
+
               <div className="flex space-x-3 mt-4 md:mt-0">
-                <Button variant="outline">
-                  Cancel
-                </Button>
+                <Button variant="outline">Cancel</Button>
                 <Button disabled={!scriptName || selectedCommands.length === 0}>
                   <Save size={16} className="mr-2" />
                   Save Script
@@ -227,7 +246,7 @@ const ScriptBuilder = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Script Builder Content */}
         <div className="container-custom py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -235,7 +254,9 @@ const ScriptBuilder = () => {
             <div className="md:col-span-1">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold">Script Details</CardTitle>
+                  <CardTitle className="text-lg font-semibold">
+                    Script Details
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -246,10 +267,10 @@ const ScriptBuilder = () => {
                         id="script-name"
                         placeholder="Enter script name"
                         value={scriptName}
-                        onChange={e => setScriptName(e.target.value)}
+                        onChange={(e) => setScriptName(e.target.value)}
                       />
                     </div>
-                    
+
                     {/* Script Description */}
                     <div className="space-y-2">
                       <Label htmlFor="script-description">Description</Label>
@@ -258,16 +279,20 @@ const ScriptBuilder = () => {
                         className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[100px] bg-background"
                         placeholder="Enter a description of what this script checks or verifies"
                         value={scriptDescription}
-                        onChange={e => setScriptDescription(e.target.value)}
+                        onChange={(e) => setScriptDescription(e.target.value)}
                       />
                     </div>
-                    
+
                     {/* Script Tags */}
                     <div className="space-y-2">
                       <Label htmlFor="script-tags">Tags</Label>
                       <div className="flex flex-wrap gap-2 mb-2">
-                        {scriptTags.map(tag => (
-                          <Badge key={tag} variant="secondary" className="flex items-center gap-1 py-1">
+                        {scriptTags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="flex items-center gap-1 py-1"
+                          >
                             <span>{tag}</span>
                             <button
                               onClick={() => removeTag(tag)}
@@ -284,8 +309,8 @@ const ScriptBuilder = () => {
                           className="rounded-r-none"
                           placeholder="Add a tag"
                           value={tagInput}
-                          onChange={e => setTagInput(e.target.value)}
-                          onKeyDown={e => e.key === 'Enter' && addTag()}
+                          onChange={(e) => setTagInput(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && addTag()}
                         />
                         <Button
                           onClick={addTag}
@@ -297,30 +322,33 @@ const ScriptBuilder = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mt-6">
                     <h3 className="text-sm font-medium mb-2">Script ID</h3>
                     <div className="bg-muted p-2 rounded-md text-sm font-mono text-muted-foreground">
                       auto-generated-upon-save
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      The script ID will be generated automatically when you save the script.
-                      You'll use this ID with the CLI to run the script.
+                      The script ID will be generated automatically when you
+                      save the script. You'll use this ID with the CLI to run
+                      the script.
                     </p>
                   </div>
                 </CardContent>
               </Card>
             </div>
-            
+
             {/* Right Column - Commands Builder */}
             <div className="md:col-span-2">
               <Card>
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="text-lg font-semibold">Commands</CardTitle>
+                    <CardTitle className="text-lg font-semibold">
+                      Commands
+                    </CardTitle>
                     <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => {
                           setShowCustomCommandForm(true);
@@ -330,7 +358,7 @@ const ScriptBuilder = () => {
                         <Plus size={14} className="mr-1" />
                         Custom Command
                       </Button>
-                      <Button 
+                      <Button
                         size="sm"
                         onClick={() => {
                           setShowCommandPalette(true);
@@ -343,13 +371,15 @@ const ScriptBuilder = () => {
                     </div>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent>
                   {/* Custom Command Form */}
                   {showCustomCommandForm && (
                     <Card className="mb-4 shadow-sm animate-fade-in">
                       <CardContent className="p-4">
-                        <h3 className="text-sm font-medium mb-3">Add Custom Command</h3>
+                        <h3 className="text-sm font-medium mb-3">
+                          Add Custom Command
+                        </h3>
                         <div className="space-y-3">
                           <div className="space-y-2">
                             <Label htmlFor="custom-name">Name</Label>
@@ -357,7 +387,9 @@ const ScriptBuilder = () => {
                               id="custom-name"
                               placeholder="Command name"
                               value={customCommandName}
-                              onChange={e => setCustomCommandName(e.target.value)}
+                              onChange={(e) =>
+                                setCustomCommandName(e.target.value)
+                              }
                             />
                           </div>
                           <div className="space-y-2">
@@ -367,22 +399,26 @@ const ScriptBuilder = () => {
                               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 font-mono bg-background"
                               placeholder="Enter shell command"
                               value={customCommandShell}
-                              onChange={e => setCustomCommandShell(e.target.value)}
+                              onChange={(e) =>
+                                setCustomCommandShell(e.target.value)
+                              }
                               rows={3}
                             />
                           </div>
                           <div className="flex justify-end space-x-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => setShowCustomCommandForm(false)}
                             >
                               Cancel
                             </Button>
-                            <Button 
+                            <Button
                               size="sm"
                               onClick={addCustomCommand}
-                              disabled={!customCommandName || !customCommandShell}
+                              disabled={
+                                !customCommandName || !customCommandShell
+                              }
                             >
                               Add
                             </Button>
@@ -391,15 +427,15 @@ const ScriptBuilder = () => {
                       </CardContent>
                     </Card>
                   )}
-                  
+
                   {/* Predefined Commands Palette with Search */}
                   {showCommandPalette && (
                     <div className="mb-4 animate-fade-in">
                       <Command className="rounded-lg border shadow-md">
                         <div className="flex items-center space-x-2 p-2 border-b">
                           <Search className="h-4 w-4 text-muted-foreground" />
-                          <CommandInput 
-                            placeholder="Search commands..." 
+                          <CommandInput
+                            placeholder="Search commands..."
                             autoFocus
                             value={searchValue}
                             onValueChange={setSearchValue}
@@ -409,15 +445,20 @@ const ScriptBuilder = () => {
                         <CommandList>
                           <CommandGroup heading="Predefined Commands">
                             {filteredCommands.length > 0 ? (
-                              filteredCommands.map(command => (
+                              filteredCommands.map((command) => (
                                 <CommandMenuItem
                                   key={command.id}
                                   onSelect={() => addCommand(command)}
                                   className="flex flex-col items-start"
                                 >
                                   <div className="flex items-center w-full">
-                                    <Terminal size={14} className="text-primary mr-2" />
-                                    <span className="font-medium">{command.name}</span>
+                                    <Terminal
+                                      size={14}
+                                      className="text-primary mr-2"
+                                    />
+                                    <span className="font-medium">
+                                      {command.name}
+                                    </span>
                                   </div>
                                   <p className="text-xs text-muted-foreground mt-1 truncate w-full pl-6">
                                     {command.shellCommand}
@@ -430,12 +471,12 @@ const ScriptBuilder = () => {
                           </CommandGroup>
                         </CommandList>
                         <div className="flex justify-end p-2 border-t">
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => {
                               setShowCommandPalette(false);
-                              setSearchValue('');
+                              setSearchValue("");
                             }}
                           >
                             Close
@@ -444,23 +485,28 @@ const ScriptBuilder = () => {
                       </Command>
                     </div>
                   )}
-                  
+
                   {/* Selected Commands List */}
                   <div>
                     {selectedCommands.length > 0 ? (
                       <div className="space-y-2">
                         {selectedCommands.map((command, index) => (
-                          <CommandItem 
-                            key={command.id} 
-                            command={command} 
+                          <CommandItem
+                            key={command.id}
+                            command={command}
                             onRemove={() => removeCommand(index)}
                           />
                         ))}
                       </div>
                     ) : (
                       <div className="text-center py-12 border border-dashed rounded-lg">
-                        <Terminal size={24} className="mx-auto text-muted-foreground mb-2" />
-                        <h3 className="text-lg font-medium mb-1">No Commands Added</h3>
+                        <Terminal
+                          size={24}
+                          className="mx-auto text-muted-foreground mb-2"
+                        />
+                        <h3 className="text-lg font-medium mb-1">
+                          No Commands Added
+                        </h3>
                         <p className="text-muted-foreground">
                           Add commands to create your diagnostic script
                         </p>
@@ -473,7 +519,7 @@ const ScriptBuilder = () => {
           </div>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
