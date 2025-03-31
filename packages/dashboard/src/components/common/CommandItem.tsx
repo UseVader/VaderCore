@@ -1,5 +1,5 @@
 
-import { Command } from '@/lib/types';
+import { Command } from '@/types/Command';
 import { Terminal, Trash, GripVertical, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ExecutionLogItem from "@/components/common/ExecutionLogItem";
-import { ExecutionLog } from "@/lib/types";
+import { ExecutionLog } from "@/types/ExecutionLog";
 import PaginationControls from "@/components/common/PaginationControls";
 
 // Mock data

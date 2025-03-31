@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Clock, Download, Share2, Terminal, ChevronsRight } from 'lucide-react';
-import { ExecutionLog } from '@/lib/types';
+import { ExecutionLog } from '@/types/ExecutionLog';
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { Separator } from '@/components/ui/separator';

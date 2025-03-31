@@ -28,7 +28,7 @@ import {
   SlidersHorizontal,
   Tag,
 } from "lucide-react";
-import { Script } from "@/lib/types";
+import { Script } from "@/types/Script";
 
 // Mock data
 const scripts: Script[] = [

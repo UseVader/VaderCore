@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { FileCog, Clock } from 'lucide-react';
-import { Project } from '@/lib/types';
+import { Project } from '@/types/Project';
 import { formatDistanceToNow } from 'date-fns';
 
 interface ProjectCardProps {

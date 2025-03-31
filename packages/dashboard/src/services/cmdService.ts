@@ -1,4 +1,4 @@
-import { Command } from "@/types/Script";
+import { Command } from "@/types/Command";
 import { axiosInstance } from "./AxiosInstance";
 
 export const getCommands = async ({

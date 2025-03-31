@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Project, Workspace } from "../types/types";
+import { Project } from "@/types/Project";
+import { Workspace } from "@/types/Workspace";
 import { toast } from "sonner";
 import CreateProjectForm from "@/components/common/CreateProjectForm";
 

@@ -18,7 +18,7 @@ import {
   Search,
 } from "lucide-react";
 import CommandItem from "@/components/common/CommandItem";
-import { Command as CommandType } from "@/lib/types";
+import { Command as CommandType } from "@/types/Command";
 import {
   Command,
   CommandEmpty,

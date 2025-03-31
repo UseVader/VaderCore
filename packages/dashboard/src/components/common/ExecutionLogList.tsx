@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import ExecutionLogItem from "./ExecutionLogItem";
-import { ExecutionLog } from "@/lib/types";
+import { ExecutionLog } from "@/types/ExecutionLog";
 import PaginationControls from "./PaginationControls";
 
 interface ExecutionLogListProps {

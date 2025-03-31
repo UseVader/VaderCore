@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Search, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Command as CommandType } from '@/lib/types';
+import { Command as CommandType } from '@/types/Command';
 
 interface CommandSearchProps {
   commands: CommandType[];
