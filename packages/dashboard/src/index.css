@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,7 +13,7 @@
     --popover: 230 14% 5%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 217 91% 60%;
+    --primary: 12 100% 56%; /* This is #FF5722 in HSL */
     --primary-foreground: 0 0% 98%;
 
     --secondary: 230 14% 12%;
@@ -55,66 +54,66 @@
   .glass-card {
     @apply bg-card/80 backdrop-blur-md border border-white/5 shadow-subtle rounded-lg;
   }
-  
+
   /* Hoverable card with subtle animation */
   .hover-card {
     @apply transition-all duration-300 ease-in-out hover:shadow-medium hover:-translate-y-1 hover:bg-secondary/90;
   }
-  
+
   /* Button styles */
   .btn-primary {
     @apply px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium transition-all duration-300 
            hover:shadow-md hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
   }
-  
+
   .btn-secondary {
     @apply px-6 py-2.5 bg-secondary text-secondary-foreground rounded-lg font-medium transition-all duration-300
            hover:bg-secondary/80 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
   }
-  
+
   .btn-ghost {
     @apply px-6 py-2.5 bg-transparent text-foreground rounded-lg font-medium transition-all duration-300
            hover:bg-secondary active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
   }
-  
+
   /* Container with max width and padding */
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   /* Section spacing */
   .section-spacing {
     @apply py-16 md:py-24;
   }
-  
+
   /* Heading styles */
   .heading-1 {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
   }
-  
+
   .heading-2 {
     @apply text-3xl md:text-4xl font-bold tracking-tight;
   }
-  
+
   .heading-3 {
     @apply text-2xl md:text-3xl font-bold;
   }
-  
+
   /* Subtle divider */
   .divider {
     @apply h-px w-full bg-gradient-to-r from-transparent via-border to-transparent;
   }
-  
+
   /* Code block styling */
   .code-block {
     @apply font-mono text-sm bg-vader-800 text-vader-100 p-4 rounded-lg overflow-x-auto;
   }
-  
+
   /* Page transitions */
   .page-transition {
     @apply animate-scale-in;
   }
-  
+
   /* Workspace/command item hover effect */
   .list-item-hover {
     @apply transition-colors duration-200 hover:bg-secondary rounded-lg;
