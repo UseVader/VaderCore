@@ -34,8 +34,8 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <div className="flex-1 py-16">
-        <div className="mx-auto max-w-md px-4">
+      <div className="flex-1 py-16 flex items-center justify-center">
+        <div className="w-full max-w-md px-4">
           <Card className="bg-card/80 border-white/10 shadow-xl">
             <CardHeader className="text-center pb-2">
               <CardTitle className="text-2xl font-bold">
