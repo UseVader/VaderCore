@@ -143,6 +143,7 @@ dist
 
 # IDE / Editor
 .idea
+.cursor
 
 # Service worker
 sw.*

@@ -8,5 +8,5 @@ export const me = async () => {
 
 export const logout = async () => {
   await axiosInstance.get("/auth/logout");
-  window.location.href = "/signin";
+  window.location.href = "/auth";
 };

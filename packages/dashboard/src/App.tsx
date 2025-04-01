@@ -12,6 +12,8 @@ import LogViewer from "./pages/LogViewer";
 import CLI from "./pages/CLI";
 import NotFound from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
+import ProtectedRoute from "@/utils/ProtectedRoute";
+import PublicRoute from "@/utils/PublicRoute";
 
 const queryClient = new QueryClient();
 
@@ -21,21 +23,84 @@ const App = () => (
     <Sonner />
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/projects/:projectId" element={<ProjectView />} />
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Index />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/landing"
+          element={
+            <PublicRoute>
+              <Landing />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/auth"
+          element={
+            <PublicRoute>
+              <Auth />
+            </PublicRoute>
+          }
+        />
+
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute protectionNeeded={true}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects/:projectId"
+          element={
+            <ProtectedRoute protectionNeeded={true}>
+              <ProjectView />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/projects/:projectId/scripts/new"
-          element={<ScriptBuilder />}
+          element={
+            <ProtectedRoute protectionNeeded={true}>
+              <ScriptBuilder />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/projects/:projectId/scripts/:scriptId"
-          element={<ScriptBuilder />}
+          element={
+            <ProtectedRoute protectionNeeded={true}>
+              <ScriptBuilder />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/projects/:projectId/logs" element={<LogViewer />} />
-        <Route path="/logs" element={<LogViewer />} />
+        <Route
+          path="/projects/:projectId/logs"
+          element={
+            <ProtectedRoute protectionNeeded={true}>
+              <LogViewer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/logs"
+          element={
+            <ProtectedRoute protectionNeeded={true}>
+              <LogViewer />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Unprotected Routes */}
         <Route path="/cli" element={<CLI />} />
+
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

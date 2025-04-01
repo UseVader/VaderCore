@@ -10,7 +10,7 @@ import { AuthUser } from 'src/types/AuthUser';
 import { User } from 'src/decorators/user.decorator';
 import { RTCookie } from 'src/decorators/rt-cookie.decorator';
 import { Response } from 'express';
-@Controller({ path: 'auth'})
+@Controller({ path: 'auth' })
 export class AuthController {
   constructor(private authService: AuthService) {}
 

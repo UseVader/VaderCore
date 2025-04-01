@@ -2,19 +2,16 @@ import { refresh } from "@/services/AuthService";
 import { me } from "@/services/UserService";
 import { useQuery } from "@tanstack/react-query";
 import { ReactElement } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/stores/UserStore";
-import type { User } from "@/types/User";
 
 interface Props {
-  protectionNeeded: boolean;
   children: ReactElement;
 }
 
-const RouteProtection = ({ protectionNeeded, children }: Props) => {
+const PublicRoute = ({ children }: Props) => {
   const setUser = useUserStore((state) => state.setUser);
-
-  if (!protectionNeeded) return children;
+  const location = useLocation();
 
   const { isPending, isError, data, isSuccess } = useQuery({
     queryKey: ["checkSession"],
@@ -23,10 +20,6 @@ const RouteProtection = ({ protectionNeeded, children }: Props) => {
     refetchOnWindowFocus: false,
   });
 
-  if (isSuccess) {
-    setUser(data);
-  }
-
   const refreshSession = useQuery({
     queryKey: ["refreshSession"],
     queryFn: refresh,
@@ -34,18 +27,24 @@ const RouteProtection = ({ protectionNeeded, children }: Props) => {
     retry: false,
   });
 
-  if (isPending) {
-    return <span>111Loading...</span>;
-  }
-
-  // If request to refresh tokens fails, redirect to signin page
-  if (refreshSession.isError) {
-    return <Navigate to="/signin" replace />;
-  }
-
-  if (protectionNeeded && !isPending && !isError) {
+  if (isSuccess) {
+    setUser(data);
+    if (location.pathname === "/auth") {
+      return <Navigate to="/dashboard" replace />;
+    }
     return children;
   }
+
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+
+  // If request to refresh tokens fails or user is not authenticated, allow access to public route
+  if (refreshSession.isError || (!isPending && isError)) {
+    return children;
+  }
+
+  return <span>Loading...</span>;
 };
 
-export default RouteProtection;
+export default PublicRoute;
