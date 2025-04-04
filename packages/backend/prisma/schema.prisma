@@ -13,19 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum CommandType {
-  USER_DEFINED
-  DEFAULT
-}
-
 model User {
-  uid              String    @id @default(cuid())
+  uid              String         @id @default(cuid())
   displayName      String?
-  email            String?   @unique
+  email            String?        @unique
   photoURL         String?
   refreshToken     String?
   providerAccounts Account[]
-  createdOn        DateTime  @default(now()) @db.Timestamp(3)
+  createdOn        DateTime       @default(now()) @db.Timestamp(3)
+  Command          Command[]
+  Script           Script[]
+  ExecutionLog     ExecutionLog[]
 }
 
 model Account {
@@ -42,59 +40,84 @@ model Account {
   @@unique(fields: [provider, providerAccountId], name: "verifyProviderAccount")
 }
 
+enum CommandType {
+  USER_DEFINED
+  PREDEFINED
+}
+
 model Command {
-  id             String          @id @default(cuid())
-  title          String
-  cmd            String
-  type           CommandType
-  isInputAllowed Boolean         @default(false)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  scripts        ScriptCommand[]
+  id                  String          @id @default(cuid())
+  title               String
+  description         String?
+  cmd                 String
+  type                CommandType     @default(USER_DEFINED)
+  createdBy           String?
+  User                User?           @relation(fields: [createdBy], references: [uid], onDelete: Cascade)
+  isInputRequired     Boolean         @default(false)
+  requiresUserWarning Boolean         @default(false) // True for commands that are safe to run but better to warn the user just in case
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  ScriptCommand       ScriptCommand[]
 }
 
 model Script {
   id            String          @id @default(cuid())
   name          String
-  updateCounter Int             @default(0)
+  description   String
+  alias         String          @unique
+  createdBy     String
+  User          User            @relation(fields: [createdBy], references: [uid], onDelete: Cascade)
+  revision      Int             @default(0)
+  tags          String[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  commands      ScriptCommand[]
-  CommandOutput CommandOutput[]
+  ScriptCommand ScriptCommand[]
+  ExecutionLog  ExecutionLog[]
 }
 
 model ScriptCommand {
-  id        String          @id @default(cuid())
-  command   Command         @relation(fields: [commandId], references: [id], onDelete: Cascade)
-  commandId String
-  script    Script          @relation(fields: [scriptId], references: [id], onDelete: Cascade)
-  scriptId  String
-  order     Int
-  args      String?
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  outputs   CommandOutput[]
+  id            String          @id @default(cuid())
+  scriptId      String
+  script        Script          @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  commandId     String
+  command       Command         @relation(fields: [commandId], references: [id], onDelete: Cascade)
+  inputArgs     String?
+  order         Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  CommandOutput CommandOutput[]
 
   @@unique([commandId, scriptId])
 }
 
 model CommandOutput {
-  id              String        @id @default(cuid())
-  scriptCommandId String
-  scriptCommand   ScriptCommand @relation(fields: [scriptCommandId], references: [id])
-  output          String
-  scriptId        String
-  script          Script        @relation(fields: [scriptId], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  PublicOutput    PublicOutput? @relation(fields: [publicOutputId], references: [id])
-  publicOutputId  String?
+  id                        String                      @id @default(cuid())
+  scriptCommandId           String
+  scriptCommand             ScriptCommand               @relation(fields: [scriptCommandId], references: [id])
+  output                    String
+  isSuccessfulExecution     Boolean
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  ExecutionLogCommandOutput ExecutionLogCommandOutput[]
 }
 
-model PublicOutput {
-  id               String          @id @default(cuid())
-  commandOutputIds String[]
-  commandOutputs   CommandOutput[]
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+model ExecutionLogCommandOutput {
+  id              String        @id @default(cuid())
+  executionLogId  String
+  ExecutionLog    ExecutionLog  @relation(fields: [executionLogId], references: [id], onDelete: Cascade)
+  commandOutputId String
+  CommandOutput   CommandOutput @relation(fields: [commandOutputId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+model ExecutionLog {
+  id                        String                      @id @default(cuid())
+  metadata                  Json
+  scriptId                  String
+  script                    Script                      @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  executedBy                String
+  User                      User                        @relation(fields: [executedBy], references: [uid], onDelete: Cascade)
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  ExecutionLogCommandOutput ExecutionLogCommandOutput[]
 }
