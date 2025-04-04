@@ -29,5 +29,7 @@ export const authCookieHandler = (res: Response, authTokens: AuthTokens) => {
     maxAge: refreshTokenValidity,
   });
 
-  return res.status(HttpStatus.OK).send();
+  const redirectUrl = <string>process.env.REDIRECT_URL;
+
+  return res.status(HttpStatus.OK).redirect(redirectUrl);
 };

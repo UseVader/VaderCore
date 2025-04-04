@@ -6,8 +6,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const handleSignIn = (endpoint: string) => {
-  const url = `http://localhost:3170/v1/auth/${endpoint}`;
-  window.open(url, "_blank");
+  const url = `${import.meta.env.VITE_BACKEND_URL}/auth/${endpoint}`;
+  window.location.href = url;
 };
 
 export const isProtectedRoute = (path: string): boolean => {
