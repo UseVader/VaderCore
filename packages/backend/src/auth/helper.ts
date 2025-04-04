@@ -3,11 +3,7 @@ import { DateTime } from 'luxon';
 import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
 
-export const authCookieHandler = (
-  res: Response,
-  authTokens: AuthTokens,
-  redirect: boolean,
-) => {
+export const authCookieHandler = (res: Response, authTokens: AuthTokens) => {
   const currentTime = DateTime.now();
   const accessTokenValidity = currentTime
     .plus({
@@ -33,9 +29,5 @@ export const authCookieHandler = (
     maxAge: refreshTokenValidity,
   });
 
-  if (!redirect) {
-    return res.status(HttpStatus.OK).send();
-  }
-
-  return res.status(HttpStatus.OK).redirect(process.env.REDIRECT_URL!);
+  return res.status(HttpStatus.OK).send();
 };

@@ -82,14 +82,12 @@ export class AuthService {
   }
 
   async refreshAuthTokens(hashedRefreshToken: string, user: AuthUser) {
-    // Check to see user is valid
     if (!user)
       return E.left({
         message: USER_NOT_FOUND,
         statusCode: HttpStatus.NOT_FOUND,
       });
 
-    // Check to see if the hashed refresh_token received from the client is the same as the refresh_token saved in the DB
     const isTokenMatched = await argon2.verify(
       user.refreshToken!,
       hashedRefreshToken,
@@ -100,7 +98,6 @@ export class AuthService {
         statusCode: HttpStatus.NOT_FOUND,
       });
 
-    // if tokens match, generate new pair of auth tokens
     const generatedAuthTokens = await this.generateAuthTokens(user.uid);
     if (E.isLeft(generatedAuthTokens))
       return E.left({

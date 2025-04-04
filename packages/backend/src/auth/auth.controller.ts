@@ -10,6 +10,7 @@ import { AuthUser } from 'src/types/AuthUser';
 import { User } from 'src/decorators/user.decorator';
 import { RTCookie } from 'src/decorators/rt-cookie.decorator';
 import { Response } from 'express';
+
 @Controller({ path: 'auth' })
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -23,7 +24,7 @@ export class AuthController {
   async googleAuthRedirect(@Request() req, @Res() res) {
     const authTokens = await this.authService.generateAuthTokens(req.user.uid);
     if (E.isLeft(authTokens)) throwHTTPErr(authTokens.left);
-    authCookieHandler(res, authTokens.right, true);
+    authCookieHandler(res, authTokens.right);
   }
 
   @Get('github')
@@ -35,7 +36,7 @@ export class AuthController {
   async githubAuthRedirect(@Request() req, @Res() res) {
     const authTokens = await this.authService.generateAuthTokens(req.user.uid);
     if (E.isLeft(authTokens)) throwHTTPErr(authTokens.left);
-    authCookieHandler(res, authTokens.right, true);
+    authCookieHandler(res, authTokens.right);
   }
 
   @Get('refresh')
@@ -50,7 +51,7 @@ export class AuthController {
       user,
     );
     if (E.isLeft(newTokenPair)) throwHTTPErr(newTokenPair.left);
-    authCookieHandler(res, newTokenPair.right, false);
+    authCookieHandler(res, newTokenPair.right);
   }
 
   @Get('logout')
