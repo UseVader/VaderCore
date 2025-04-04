@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import PrismaService from 'src/prisma/prisma.service';
-import CreateCommandDto from './dtos/create-command-dto';
-import UpdateCommandDto from './dtos/update-command-dto';
+import CreateCommandDto from './dtos/create-command.dto';
+import UpdateCommandDto from './dtos/update-command.dto';
 import * as E from 'fp-ts/Either';
 import { RESTError } from 'src/types/RESTError';
 import { CommandType } from '@prisma/client';

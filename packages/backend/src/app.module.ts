@@ -5,7 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { ScriptOutputsModule } from './script-outputs/script-outputs.module';
-import { PublicOutputsModule } from './public-outputs/public-outputs.module';
 
 @Module({
   imports: [
@@ -15,7 +14,6 @@ import { PublicOutputsModule } from './public-outputs/public-outputs.module';
     PrismaModule,
     UserModule,
     ScriptOutputsModule,
-    PublicOutputsModule,
   ],
 })
 export class AppModule {}

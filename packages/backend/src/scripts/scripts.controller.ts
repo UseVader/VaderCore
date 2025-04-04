@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ScriptsService } from './scripts.service';
-import CreateScriptDto from './dto/create-script-dto';
-import UpdateScriptDto from './dto/update-script-dto';
-import GetScriptsDto from './dto/get-scripts-dto';
+import CreateScriptDto from './dto/create-script.dto';
+import UpdateScriptDto from './dto/update-script.dto';
+import GetScriptsDto from './dto/get-scripts.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import * as E from 'fp-ts/Either';
 import { throwHTTPErr } from 'src/utils';

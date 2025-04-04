@@ -1,3 +1,5 @@
+import { User } from '@prisma/client';
+
 class CreateScriptDto {
   name: string;
   commands: {
@@ -5,6 +7,7 @@ class CreateScriptDto {
     args?: string;
   }[];
   args?: string;
+  user: User;
 }
 
 export default CreateScriptDto;

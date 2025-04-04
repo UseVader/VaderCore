@@ -10,9 +10,9 @@ import {
   Patch,
 } from '@nestjs/common';
 import { CommandsService } from './commands.service';
-import CreateCommandDto from './dtos/create-command-dto';
-import UpdateCommandDto from './dtos/update-command-dto';
-import GetCommandDto from './dtos/get-command-dto';
+import CreateCommandDto from './dtos/create-command.dto';
+import UpdateCommandDto from './dtos/update-command.dto';
+import GetCommandDto from './dtos/get-command.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import * as E from 'fp-ts/Either';
 import { throwHTTPErr } from 'src/utils';

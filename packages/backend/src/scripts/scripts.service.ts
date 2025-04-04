@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import PrismaService from 'src/prisma/prisma.service';
-import CreateScriptDto from './dto/create-script-dto';
-import UpdateScriptDto from './dto/update-script-dto';
+import CreateScriptDto from './dto/create-script.dto';
+import UpdateScriptDto from './dto/update-script.dto';
 import * as E from 'fp-ts/Either';
 import { RESTError } from 'src/types/RESTError';
 
@@ -22,13 +22,6 @@ export class ScriptsService {
         orderBy: {
           id: 'asc',
         },
-        include: {
-          commands: {
-            include: {
-              command: true,
-            },
-          },
-        },
       });
     }
 
@@ -39,26 +32,12 @@ export class ScriptsService {
       orderBy: {
         id: 'asc',
       },
-      include: {
-        commands: {
-          include: {
-            command: true,
-          },
-        },
-      },
     });
   }
 
   async getScript(id: string) {
     const script = await this.prisma.script.findUnique({
       where: { id },
-      include: {
-        commands: {
-          include: {
-            command: true,
-          },
-        },
-      },
     });
 
     if (!script) {
@@ -76,6 +55,12 @@ export class ScriptsService {
       const newScript = await this.prisma.script.create({
         data: {
           name: script.name,
+          alias: 'some-thing',
+          User: {
+            connect: {
+              uid: script.user.uid,
+            },
+          },
         },
       });
 
@@ -122,7 +107,7 @@ export class ScriptsService {
       });
 
       return E.right(script.right);
-    } catch (error) {
+    } catch {
       return E.left(<RESTError>{
         message: 'scripts/delete_failed',
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -155,7 +140,7 @@ export class ScriptsService {
       if (script?.commands) {
         await this.prisma.script.update({
           where: { id },
-          data: { updateCounter: { increment: 1 } },
+          data: { revision: { increment: 1 } },
         });
 
         await this.prisma.scriptCommand.deleteMany({
@@ -175,7 +160,7 @@ export class ScriptsService {
       }
 
       return E.right(scriptToUpdate.right);
-    } catch (err) {
+    } catch {
       return E.left(<RESTError>{
         message: 'scripts/update_failed',
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -200,8 +185,10 @@ export class ScriptsService {
     });
 
     const parsedScript = scriptCommands?.map((command) => {
-      if (command.command.isInputAllowed) {
-        const args: any = command.args ? JSON.parse(command.args) : {};
+      if (command.command.isInputRequired) {
+        const args: any = command.inputArgs
+          ? JSON.parse(command.inputArgs)
+          : {};
         let cmd = command.command.cmd;
         Object.keys(args).forEach((key) => {
           cmd = cmd.replaceAll(`${key}`, args[key]);
@@ -221,10 +208,9 @@ export class ScriptsService {
         id: command.command.id,
         scriptCommandId: command.id,
         scriptId: script.right.id,
-        scriptName: script.right.name
+        scriptName: script.right.name,
       };
     });
-
 
     return E.right(parsedScript);
   }

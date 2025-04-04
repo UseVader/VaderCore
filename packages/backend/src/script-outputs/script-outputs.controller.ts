@@ -6,8 +6,8 @@ import { CreateScriptOutputDto } from './dto/create-script.dto';
 export class ScriptOutputsController {
   constructor(private readonly scriptOutputsService: ScriptOutputsService) {}
 
-  @Post()
-  async createScriptOutputs(@Body() scriptOutputs: CreateScriptOutputDto[]) {
-    return await this.scriptOutputsService.createScriptOutputs(scriptOutputs);
-  }
+  // @Post()
+  // async createScriptOutputs(@Body() scriptOutputs: CreateScriptOutputDto[]) {
+  //   return await this.scriptOutputsService.createScriptOutputs(scriptOutputs);
+  // }
 }
